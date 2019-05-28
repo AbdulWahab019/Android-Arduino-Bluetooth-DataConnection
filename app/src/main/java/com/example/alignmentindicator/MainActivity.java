@@ -189,15 +189,6 @@ public class MainActivity extends AppCompatActivity {
 
         else {
 
-//            mReadBuffer.setOnClickListener(new View.OnClickListener(){
-//                @Override
-//                public void onClick(View v){
-//                    if(mConnectedThread != null) //First check to make sure thread created
-//                        mConnectedThread.write("1");
-//                }
-//            });
-
-
             mScanBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -222,31 +213,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
-
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus)
-//    {
-//        super.onWindowFocusChanged(hasFocus);
-//        m.windowFocusChanged(hasFocus);
-//    }
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        m.pause();
-//    }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        m.resume();
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        m.quit();
-//    }
-
-
 
     private void bluetoothOn(View view){
         if (!mBTAdapter.isEnabled()) {
@@ -431,7 +397,7 @@ public class MainActivity extends AppCompatActivity {
                         mHandler.obtainMessage(MESSAGE_READ, bytesR, -1, buffer)
                                 .sendToTarget(); // Send the obtained bytes to the UI activity
 
-                        Thread.sleep(195);
+                        Thread.sleep(200);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
