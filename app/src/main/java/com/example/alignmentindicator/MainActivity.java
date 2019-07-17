@@ -27,8 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.AlignCar.AlignmentCar.UnityPlayerActivity;
-import com.unity3d.player.UnityPlayer;
+//import com.AlignCar.AlignmentCar.UnityPlayerActivity;
+//import com.unity3d.player.UnityPlayer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,9 +40,10 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     // GUI Components
-    private UnityPlayer m;
+    //  private UnityPlayer m;
     private TextView mBluetoothStatus;
-    private TextView mX,mY,mZ,X,Y,Z;
+    private TextView X,Y,Z;
+    private TextView A,B,C;
     private Button mScanBtn;
     private Button mOffBtn;
     private Button mListPairedDevicesBtn;
@@ -52,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
     private Set<BluetoothDevice> mPairedDevices;
     private ArrayAdapter<String> mBTArrayAdapter;
     private ListView mDevicesListView;
+    private String readMessage;
 
     String xV,yV,zV,X1,Y1,Z1;
+    String aV,bV,cV,A1,B1,C1;
 
     private Handler mHandler; // Our main handler that will receive callback notifications
     private ConnectedThread mConnectedThread; // bluetooth background worker thread to send and receive data
@@ -90,14 +93,17 @@ public class MainActivity extends AppCompatActivity {
 //        m.resume();
 
         mBluetoothStatus = (TextView) findViewById(R.id.bluetoothStatus);
-        mX = (TextView) findViewById(R.id.valueX);
-        mY = (TextView) findViewById(R.id.valueY);
-        mZ = (TextView) findViewById(R.id.valueZ);
+//        mX = (TextView) findViewById(R.id.valueX);
+//        mY = (TextView) findViewById(R.id.valueY);
+//        mZ = (TextView) findViewById(R.id.valueZ);
 
-        X = (TextView) findViewById(R.id.valueXexact);
-        Y = (TextView) findViewById(R.id.valueYexact);
-        Z = (TextView) findViewById(R.id.valueZexact);
+        X = (TextView) findViewById(R.id.valueX);
+        Y = (TextView) findViewById(R.id.valueY);
+        Z = (TextView) findViewById(R.id.valueZ);
 
+        A = (TextView) findViewById(R.id.valueA);
+        B = (TextView) findViewById(R.id.valueB);
+        C = (TextView) findViewById(R.id.valueC);
 //        mReadBuffer = (TextView) findViewById(R.id.readBuffer);
 //        mReadBuffer1 = (TextView) findViewById(R.id.readBuffer1);
 //        mAvailable = (TextView) findViewById(R.id.availableB);
@@ -118,18 +124,64 @@ public class MainActivity extends AppCompatActivity {
 
         mHandler = new Handler() {
             public void handleMessage(android.os.Message msg) {
+                //Log.e("mHandler", "mHandler Running");
                 String temp;
                 if (msg.what == MESSAGE_READ) {
 
                     // construct a string from the valid bytes in the buffer
                     byte[] readBuf;
-                    String readMessage = null;
                     try {
+
+                        //Log.e("Before readBuf", "Before");
                         readBuf = (byte[]) msg.obj;
+                        //Log.e("After readBuf", "After");
                         //readMessage = new String(readBuf, 0, msg.arg1);
-                        readMessage = new String((byte[]) msg.obj, "UTF-8");
+                        //Log.e("Message", "Message: "+readMessage);
+                        //Log.e("Before readMessage", "Before");
+                        //String readMessage1 = new String((byte [])msg.obj, "UTF-8");
+                        //Log.e("Message", "Message: "+readMessage1);
+
                         if(readMessage.contains("()")){
-                            if(readMessage.indexOf("X=") == 0) {
+                            if(readMessage.indexOf("A=") == 0){
+                                aV = readMessage;
+                                aV = aV.substring(2);
+                                if(aV.contains("-")){
+                                    A1 = readMessage.substring(readMessage.indexOf("-"),readMessage.indexOf("()"));
+                                }
+                                else{
+                                    A1 = readMessage.substring(readMessage.indexOf("=")+1,readMessage.indexOf("()"));
+                                }
+
+//                                mZ.setText(zV);
+                                A.setText(A1);
+                            }
+                            else if(readMessage.indexOf("B=") == 0){
+                                bV = readMessage;
+                                bV = bV.substring(2);
+                                if(bV.contains("-")){
+                                    B1 = readMessage.substring(readMessage.indexOf("-"),readMessage.indexOf("()"));
+                                }
+                                else{
+                                    B1 = readMessage.substring(readMessage.indexOf("=")+1,readMessage.indexOf("()"));
+                                }
+
+//                                mZ.setText(zV);
+                                B.setText(B1);
+                            }
+                            else if(readMessage.indexOf("C=") == 0){
+                                cV = readMessage;
+                                cV = cV.substring(2);
+                                if(cV.contains("-")){
+                                    C1 = readMessage.substring(readMessage.indexOf("-"),readMessage.indexOf("()"));
+                                }
+                                else{
+                                    C1 = readMessage.substring(readMessage.indexOf("=")+1,readMessage.indexOf("()"));
+                                }
+
+//                                mZ.setText(zV);
+                                C.setText(C1);
+                            }
+                            else if(readMessage.indexOf("X=") == 0) {
                                 xV = readMessage;
                                 xV = xV.substring(2);
                                 if(readMessage.contains("-")){
@@ -138,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                                 else{
                                     X1 = readMessage.substring(readMessage.indexOf("=")+1,readMessage.indexOf("()"));
                                 }
-                                mX.setText(xV);
+//                                mX.setText(xV);
                                 X.setText(X1);
                             }
                             else if(readMessage.indexOf("Y=") == 0){
@@ -150,20 +202,19 @@ public class MainActivity extends AppCompatActivity {
                                 else{
                                     Y1 = readMessage.substring(readMessage.indexOf("=")+1,readMessage.indexOf("()"));
                                 }
-                                mY.setText(yV);
+//                                mY.setText(yV);
                                 Y.setText(Y1);
                             }
-                            else if(readMessage.indexOf("Z=") == 0){
+                            else if(readMessage.indexOf("Z=") == 0) {
                                 zV = readMessage;
                                 zV = zV.substring(2);
-                                if(zV.contains("-")){
-                                    Z1 = readMessage.substring(readMessage.indexOf("-"),readMessage.indexOf("()"));
-                                }
-                                else{
-                                    Z1 = readMessage.substring(readMessage.indexOf("=")+1,readMessage.indexOf("()"));
+                                if (zV.contains("-")) {
+                                    Z1 = readMessage.substring(readMessage.indexOf("-"), readMessage.indexOf("()"));
+                                } else {
+                                    Z1 = readMessage.substring(readMessage.indexOf("=") + 1, readMessage.indexOf("()"));
                                 }
 
-                                mZ.setText(zV);
+//                                mZ.setText(zV);
                                 Z.setText(Z1);
                             }
                         }
@@ -376,28 +427,40 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void run() {
-            byte[] buffer = new byte[1024];  // buffer store for the stream
 
             // Keep listening to the InputStream until an exception occurs
             while (true) {
                 try {
+                    byte[] buffer = new byte[1024];  // buffer store for the stream
                     // Read from the InputStream
                     bytesA = mmInStream.available();
 //                    mAvailable.setText(bytes);
 
-                    if(bytesA > 0) {
-//                        SystemClock.sleep(100); //pause and wait for rest of data. Adjust this depending on your sending speed.
-                        bytesA = mmInStream.available(); // how many bytes are ready to be read?
+                    if(bytesA != 0) {
+                        try {
+                            SystemClock.sleep(100); //pause and wait for rest of data. Adjust this depending on your sending speed.
+                            bytesA = mmInStream.available(); // how many bytes are ready to be read?
+                            //Log.e("Available", "Available Bytes: "+bytesA);
 //                        mAvailable.setText(bytesA);
 //                        bytesA = mmInStream.available();
 
-                        bytesR = mmInStream.read(buffer); // record how many bytes we actually read
+                            bytesR = mmInStream.read(buffer); // record how many bytes we actually read
+                            //Log.e("Received", "Received Bytes: "+bytesR);
 //                        mReadBuffer.setText("We Reading "+bytes+" bytes");
 
-                        mHandler.obtainMessage(MESSAGE_READ, bytesR, -1, buffer)
-                                .sendToTarget(); // Send the obtained bytes to the UI activity
+                            readMessage = new String(buffer, 0, bytesR);
 
-                        Thread.sleep(200);
+                            Log.e("Avein", "Received Message: " + readMessage);
+
+                            mHandler.obtainMessage(MESSAGE_READ, bytesR, -1)
+                                    .sendToTarget(); // Send the obtained bytes to the UI activity
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
+                        SystemClock.sleep(50);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
