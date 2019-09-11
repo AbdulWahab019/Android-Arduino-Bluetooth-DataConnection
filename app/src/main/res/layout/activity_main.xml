@@ -15,7 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -23,24 +24,22 @@
                 android:layout_weight="0.1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="A:"
+                android:text="@string/a"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/valueA"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Value of A" />
+                android:text="@string/value_of_a" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="B: "
-                android:layout_centerHorizontal="true"
+                android:text="@string/b"
                 android:maxLines="1"
                 android:textStyle="bold" />
 
@@ -48,17 +47,15 @@
                 android:id="@+id/valueB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Value of B" />
+                android:text="@string/value_of_b" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="C: "
-                android:layout_centerHorizontal="true"
+                android:text="@string/c"
                 android:maxLines="1"
                 android:textStyle="bold" />
 
@@ -66,11 +63,10 @@
                 android:id="@+id/valueC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Value of C" />
+                android:text="@string/value_of_c" />
 
         </LinearLayout>
     </LinearLayout>
@@ -92,54 +88,49 @@
                 android:layout_weight="0.1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="X:"
+                android:text="@string/x"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/valueX"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Value of X" />
+                android:text="@string/value_of_x" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:maxLines="1"
-                android:text="Y: "
+                android:text="@string/y"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/valueY"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Value of Y" />
+                android:text="@string/value_of_y" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:maxLines="1"
-                android:text="Z: "
+                android:text="@string/z"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/valueZ"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Value of Z" />
+                android:text="@string/value_of_z" />
 
         </LinearLayout>
 
@@ -155,20 +146,17 @@
                 android:layout_weight="0.1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Status:"
+                android:text="@string/status"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/bluetoothStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_alignTop="@+id/checkboxLED1"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="0.9"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Bluetooth Status" />
+                android:text="@string/bluetooth_status" />
 
         </LinearLayout>
 
@@ -176,18 +164,13 @@
             android:id="@+id/scan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/off"
-            android:text="Turn on Bluetooth" />
+            android:text="@string/turn_on_bluetooth" />
 
         <Button
             android:id="@+id/off"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/scan"
-            android:layout_toEndOf="@+id/PairedBtn"
-            android:layout_toRightOf="@+id/PairedBtn"
-            android:text="Turn off Bluetooth" />
+            android:text="@string/turn_off_bluetooth" />
 
         <!--<FrameLayout-->
         <!--android:id="@+id/frameLayout"-->
@@ -200,28 +183,18 @@
             android:id="@+id/PairedBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/scan"
-            android:layout_toStartOf="@+id/discover"
-            android:text="Show paired Devices" />
+            android:text="@string/show_paired_devices" />
 
         <ListView
             android:id="@+id/devicesListView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/PairedBtn"
-            android:layout_alignEnd="@+id/off"
-            android:layout_alignRight="@+id/off"
             android:choiceMode="singleChoice" />
 
         <Button
             android:id="@+id/discover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/off"
-            android:layout_toEndOf="@+id/checkboxLED1"
-            android:layout_toRightOf="@+id/checkboxLED1"
-            android:text="Discover New Devices" />
-
+            android:text="@string/discover_new_devices" />
     </LinearLayout>
-
 </RelativeLayout>
