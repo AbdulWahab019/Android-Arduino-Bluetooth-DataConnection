@@ -1,6 +1,6 @@
 package com.example.alignmentindicator;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -8,21 +8,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.PixelFormat;
-import android.nfc.Tag;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.FrameLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,8 +25,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Set;
 import java.util.UUID;
 
@@ -42,21 +33,16 @@ public class MainActivity extends AppCompatActivity {
     // GUI Components
     //  private UnityPlayer m;
     private TextView mBluetoothStatus;
-    private TextView X,Y,Z;
-    private TextView A,B,C;
-    private Button mScanBtn;
-    private Button mOffBtn;
-    private Button mListPairedDevicesBtn;
-    private Button mDiscoverBtn;
-    private Button mUnity;
+    private TextView X, Y, Z;
+    private TextView A, B, C;
+    ListView mDevicesListView;
+    //private Button mUnity;
     private BluetoothAdapter mBTAdapter;
-    private Set<BluetoothDevice> mPairedDevices;
     private ArrayAdapter<String> mBTArrayAdapter;
-    private ListView mDevicesListView;
     private String readMessage;
 
-    String xV,yV,zV,X1,Y1,Z1;
-    String aV,bV,cV,A1,B1,C1;
+    String xV, yV, zV, X1, Y1, Z1;
+    String aV, bV, cV, A1, B1, C1;
 
     private Handler mHandler; // Our main handler that will receive callback notifications
     private ConnectedThread mConnectedThread; // bluetooth background worker thread to send and receive data
@@ -69,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_ENABLE_BT = 1; // used to identify adding bluetooth names
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
     private final static int CONNECTING_STATUS = 3; // used in bluetooth handler to identify message status
-    private int x,y,z;
     int bytesA = -1,bytesR = -1;
 
 
+    @SuppressLint({"HandlerLeak", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,48 +78,39 @@ public class MainActivity extends AppCompatActivity {
 //        m.windowFocusChanged(true);
 //        m.resume();
 
-        mBluetoothStatus = (TextView) findViewById(R.id.bluetoothStatus);
-//        mX = (TextView) findViewById(R.id.valueX);
-//        mY = (TextView) findViewById(R.id.valueY);
-//        mZ = (TextView) findViewById(R.id.valueZ);
+        mBluetoothStatus = findViewById(R.id.bluetoothStatus);
 
-        X = (TextView) findViewById(R.id.valueX);
-        Y = (TextView) findViewById(R.id.valueY);
-        Z = (TextView) findViewById(R.id.valueZ);
-
-        A = (TextView) findViewById(R.id.valueA);
-        B = (TextView) findViewById(R.id.valueB);
-        C = (TextView) findViewById(R.id.valueC);
-//        mReadBuffer = (TextView) findViewById(R.id.readBuffer);
-//        mReadBuffer1 = (TextView) findViewById(R.id.readBuffer1);
-//        mAvailable = (TextView) findViewById(R.id.availableB);
-        mScanBtn = (Button) findViewById(R.id.scan);
-        mOffBtn = (Button) findViewById(R.id.off);
-        mDiscoverBtn = (Button) findViewById(R.id.discover);
-        mListPairedDevicesBtn = (Button) findViewById(R.id.PairedBtn);
+        X = findViewById(R.id.valueX);
+        Y = findViewById(R.id.valueY);
+        Z = findViewById(R.id.valueZ);
+        A = findViewById(R.id.valueA);
+        B = findViewById(R.id.valueB);
+        C = findViewById(R.id.valueC);
+        Button mScanBtn = findViewById(R.id.scan);
+        Button mOffBtn = findViewById(R.id.off);
+        Button mDiscoverBtn = findViewById(R.id.discover);
+        Button mListPairedDevicesBtn = findViewById(R.id.PairedBtn);
 //        mUnity = (Button) findViewById(R.id.Unity);
 
 //        mLED1 = (CheckBox)findViewById(R.id.checkboxLED1);
 
-        mBTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        mBTArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         mBTAdapter = BluetoothAdapter.getDefaultAdapter(); // get a handle on the bluetooth radio
 
-        mDevicesListView = (ListView) findViewById(R.id.devicesListView);
+        mDevicesListView = findViewById(R.id.devicesListView);
         mDevicesListView.setAdapter(mBTArrayAdapter); // assign model to view
         mDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
         mHandler = new Handler() {
+            @SuppressLint("SetTextI18n")
             public void handleMessage(android.os.Message msg) {
                 //Log.e("mHandler", "mHandler Running");
-                String temp;
                 if (msg.what == MESSAGE_READ) {
 
                     // construct a string from the valid bytes in the buffer
-                    byte[] readBuf;
                     try {
 
                         //Log.e("Before readBuf", "Before");
-                        readBuf = (byte[]) msg.obj;
                         //Log.e("After readBuf", "After");
                         //readMessage = new String(readBuf, 0, msg.arg1);
                         //Log.e("Message", "Message: "+readMessage);
@@ -214,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
                                     Z1 = readMessage.substring(readMessage.indexOf("=") + 1, readMessage.indexOf("()"));
                                 }
 
-//                                mZ.setText(zV);
                                 Z.setText(Z1);
                             }
                         }
@@ -225,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (msg.what == CONNECTING_STATUS) {
                     if (msg.arg1 == 1)
-                        mBluetoothStatus.setText("Connected to Device: " + (String) (msg.obj));
+                        mBluetoothStatus.setText("Connected to Device: " +(msg.obj));
                     else
                         mBluetoothStatus.setText("Connection Failed");
                 }
@@ -243,29 +219,30 @@ public class MainActivity extends AppCompatActivity {
             mScanBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bluetoothOn(v);
+                    bluetoothOn();
                 }
             });
 
             mOffBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    bluetoothOff(v);
+                    bluetoothOff();
                 }
             });
 
-            mListPairedDevicesBtn.setOnClickListener(new View.OnClickListener() {@Override public void onClick(View v){ listPairedDevices(v); }});
+            mListPairedDevicesBtn.setOnClickListener(new View.OnClickListener() {@Override public void onClick(View v){ listPairedDevices(); }});
 
             mDiscoverBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    discover(v);
+                    discover();
                 }
             });
         }
     }
 
-    private void bluetoothOn(View view){
+    @SuppressLint("SetTextI18n")
+    private void bluetoothOn(){
         if (!mBTAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -279,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Enter here after user selects "yes" or "no" to enabling radio
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent Data){
         // Check which request we're responding to
@@ -294,13 +272,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void bluetoothOff(View view){
+    @SuppressLint("SetTextI18n")
+    private void bluetoothOff(){
         mBTAdapter.disable(); // turn off
         mBluetoothStatus.setText("Bluetooth disabled");
         Toast.makeText(getApplicationContext(),"Bluetooth turned Off", Toast.LENGTH_SHORT).show();
     }
 
-    private void discover(View view){
+    private void discover(){
         // Check if the device is already discovering
         if(mBTAdapter.isDiscovering()){
             mBTAdapter.cancelDiscovery();
@@ -332,10 +311,13 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void listPairedDevices(View view){
-        mPairedDevices = mBTAdapter.getBondedDevices();
+    private void listPairedDevices(){
+        Set<BluetoothDevice> mPairedDevices = mBTAdapter.getBondedDevices();
         if(mBTAdapter.isEnabled()) {
             // put it's one to the adapter
+            mBTArrayAdapter.clear();
+            mDevicesListView.setAdapter(null);
+
             for (BluetoothDevice device : mPairedDevices)
                 mBTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
 
@@ -343,6 +325,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else
             Toast.makeText(getApplicationContext(), "Bluetooth not on", Toast.LENGTH_SHORT).show();
+
+        mDevicesListView.setAdapter(mBTArrayAdapter);
     }
 
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
@@ -359,6 +343,7 @@ public class MainActivity extends AppCompatActivity {
             String info = ((TextView) v).getText().toString();
             final String address = info.substring(info.length() - 17);
             final String name = info.substring(0,info.length() - 17);
+
 
             // Spawn a new thread to avoid blocking the GUI one
             new Thread()
@@ -397,6 +382,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }.start();
+
+            mDevicesListView.setAdapter(null);
         }
     };
 
@@ -406,17 +393,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class ConnectedThread extends Thread {
-        private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
 
         private ConnectedThread(BluetoothSocket socket) {
-            mmSocket = socket;
             InputStream tmpIn = null;
 
             // Get the input and output streams, using temp objects because
             // member streams are final
             try {
-                tmpIn = mmSocket.getInputStream();
+                tmpIn = socket.getInputStream();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -449,8 +434,6 @@ public class MainActivity extends AppCompatActivity {
 //                        mReadBuffer.setText("We Reading "+bytes+" bytes");
 
                             readMessage = new String(buffer, 0, bytesR);
-
-                            Log.e("Avein", "Received Message: " + readMessage);
 
                             mHandler.obtainMessage(MESSAGE_READ, bytesR, -1)
                                     .sendToTarget(); // Send the obtained bytes to the UI activity
